@@ -1,3 +1,5 @@
+--// !Place in server protected area! --\\
+
 --// Services
 local RunService = game:GetService("RunService")
 
