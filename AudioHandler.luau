@@ -68,12 +68,12 @@ end
 
 function Audio:Play()
 	self.IsPlaying = not self.IsPlaying
-	self.sound:Play()
+	self.Sound:Play()
 end
 
 function Audio:Stop()
 	self.IsPlaying = not self.IsPlaying
-	self.sound:Stop()
+	self.Sound:Stop()
 end
 
 function Audio:_connectGlobalSignals()
