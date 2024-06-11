@@ -1,4 +1,4 @@
---// !Place in server protected area! --\\
+--// !Place in server protected area! \\--
 -- Made by .sickk on Discord (in progress)
 
 --// Services
