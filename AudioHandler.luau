@@ -55,7 +55,7 @@ function Audio.new()
 	return self
 end
 
-function Audio:sync()
+function Audio:Sync()
 	for property, value in pairs(self) do
 		if not string.match(property, "_") then -- We ignore hidden property's
 			self[property] = value
@@ -64,8 +64,13 @@ function Audio:sync()
 end
 
 function Audio:Play()
-	self.IsPlaying = true
+	self.IsPlaying = not self.IsPlaying
 	self.sound:Play()
+end
+
+function Audio:Stop()
+	self.IsPlaying = not self.IsPlaying
+	self.sound:Stop()
 end
 
 function Audio:_connectGlobalSignals()
