@@ -6,11 +6,14 @@ local AudioHandler = {}
 AudioHandler.__index = AudioHandler
 
 local default = {
+	["Sound"] = Instance.new("Sound"),
 	["IsPlaying"] = false,
 	["PlaybackSpeed"] = 1,
 	["Volume"] = 1,
-	["Signals"] = {},
-	["GlobalOverRide"] = true, -- Wether global settings affect the audio
+	
+	-- Hidden
+	["_Signals"] = {},
+	["_GlobalOverRide"] = true, -- Wether global settings affect the audio
 }
 
 --// Signals \\--
@@ -41,28 +44,51 @@ local function deepClone(Table: {})
 	return clone
 end
 
---// Functions \\--
-function AudioHandler.add()
-	local self = deepClone(default)
-	self = setmetatable(self, AudioHandler)
+--// Audio base class \\--
+local Audio = {}
+Audio.__index = Audio
+
+function Audio.new()
+	local self = setmetatable(deepClone(default), Audio)
 	self:_connectGlobalSignals()
-	
+
 	return self
 end
 
-function AudioHandler:_connectGlobalSignals()
+function Audio:sync()
+	for property, value in pairs(self) do
+		if not string.match(property, "_") then -- We ignore hidden property's
+			self[property] = value
+		end
+	end
+end
+
+function Audio:Play()
+	self.IsPlaying = true
+	self.sound:Play()
+end
+
+function Audio:_connectGlobalSignals()
 	assert(RunService:IsServer(), "Attempt to connect global signals on Client.")
-	assert(not self.Signals[1], "Attempt to connect connected global signals")
-	
+	assert(not self._Signals[1], "Attempt to connect connected global signals")
+	assert(self._GlobalOverRide, "Attempt to connect global signals when GlobalOverRide is false.")
+
 	for key, signal: Instance in pairs(globalSignals) do
 		print(self, signal)
-		self.Signals[key] = signal._event
-		self.Signals[key].Event:Connect(function(newValue)
+		self._Signals[key] = signal._event
+		self._Signals[key].Event:Connect(function(newValue)
 			self[signal.Changed] = newValue
 			print(self)
 		end)
 	end
 	print(self)
+end
+
+--// Functions \\--
+
+function AudioHandler.new()
+	local self = setmetatable({}, AudioHandler)
+	return self
 end
 
 function AudioHandler:_changeGlobalSpeed(newSpeed)
@@ -73,5 +99,9 @@ function AudioHandler:_changeGlobalSpeed(newSpeed)
 	local signal: BindableEvent = globalSignals.ChangeGlobalVolume
 	signal._event:Fire(newSpeed)
 end
+
+--// Exporting classes
+
+AudioHandler.Audio = Audio
 
 return AudioHandler
