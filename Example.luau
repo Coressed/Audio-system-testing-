@@ -1,4 +1,6 @@
---// Path: ServerScriptService/AudioSystem --\\
+--// Script-Path: ServerScriptService/AudioSystem --\\
+--// Module-Path: ServerScriptService/AudioSystem/CustomAudioHandler --\\
+-- Made by .sickk on Discord (in progress)
 
 local CustomAudioHandler = require(script.Parent.AudioSystem.CustomAudioHandler) -- Module
 
