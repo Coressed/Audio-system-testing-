@@ -1,4 +1,5 @@
 --// !Place in server protected area! --\\
+-- Made by .sickk on Discord (in progress)
 
 --// Services
 local RunService = game:GetService("RunService")
